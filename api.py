@@ -1,18 +1,20 @@
-from flask import Flask
+from flask import Flask, request
+from flask_cors import CORS
 import numpy as np
 import pickle
 import keras
 from keras.applications.vgg16 import VGG16, preprocess_input
 from keras.models import Model
+from keras_preprocessing import image 
 from keras_preprocessing.sequence import pad_sequences
-
+from PIL import Image
 
 class CaptionGenerator:
     def __init__(self, model_name="8k"):
         self.CNNmodel = VGG16()
         self.CNNmodel = Model(inputs=self.CNNmodel.inputs, outputs=self.CNNmodel.layers[-2].output)
         self.model = keras.models.load_model(model_name)
-        self.wrd_indx, self.indx_wrd, self.max_length = self.laod_data()
+        self.wrd_indx, self.indx_wrd, self.max_length = self.load_data()
 
     def read_pickle(self, name):
         f = open(name, "rb")
@@ -27,19 +29,12 @@ class CaptionGenerator:
             max_length = self.read_pickle("max_length8.pickle")
         return wrd_indx, indx_wrd, max_length
     
-    def extract_features(self, image):
-        ## deal with image format and stuff
-
-        image = preprocess_input(image)
-        features = self.CNNmodel.predict(image)
+    def extract_features(self, img):
+        img = image.img_to_array(img)
+        img = np.expand_dims(img, axis=0)
+        img = preprocess_input(img)
+        features = self.CNNmodel.predict(img)
         return features  
-        """
-            filename = path + "/" + img_id
-            img = image.load_img(filename, target_size=(224, 224))
-            img = image.img_to_array(img)
-            img = np.expand_dims(img, axis=0)
-            img = preprocess_input(img)
-        """
 
     def get_caption(self, image):
         feature = self.extract_features(image)
@@ -59,19 +54,32 @@ class CaptionGenerator:
                 break
         return in_text
 
-# def main():
 
 app = Flask(__name__)
+CORS(app)
 cg = CaptionGenerator()
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+
 
 @app.route("/")
 def hello():
     return "Hello World"
 
-@app.route("/get_caption")
+@app.route("/get_caption", methods = ["POST"])
 def return_caption():
-    # get_caption()
-    pass
+    if 'file' not in request.files:
+        return "No file part", 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return "No selected file", 400
     
-# if __name__ == "__main__":
-    # main()
+    if file:
+        img = Image.open(file   )
+        img = img.convert("RGB")
+        img = img.resize((224, 224))
+        result = cg.get_caption(img)
+    return result
+
+if __name__ == "__main__":
+    app.run(debug=True, port=1001)
