@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="wclassth=device-wclassth, initial-scale=1.0"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Caption generator</title>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="nav-logo">
+          <!-- <img src="images/logo.png" alt="logo" class="ll" /> -->
+        </div>
+      </header>
+      <nav class="nav">
+        <ul>
+          <ol>
+            <a href="#section1">Home Page </a>
+          </ol>
+          <ol>
+            <a href="#section2">Get a caption</a>
+          </ol>
+          <ol>
+            <a href="#steps">Algorithims used </a>
+          </ol>
+          <!-- <ol><a href="#"></a>Info</ol> -->
+        </ul>
+      </nav>
+      <main class="main">
+        <section id="section1">
+          <h2>Image caption generator</h2>
+          <article class="ar">
+            <p>
+              The model takes the image as an input which goes through the CNN
+              model for feature extraction and then passes through the LSTM
+              model for caption generation.
+            </p>
+
+            <div class="sec1--image">
+              <img src="images/OIP.jpg" alt="aa" />
+            </div>
+          </article>
+          <article class="ar">
+            <div>
+              <img src="images/example.jpeg " alt="aa" />
+              <p>Brown dog is running through the grass.</p>
+            </div>
+            <p>The model will train over the training data of 8000 samples.</p>
+          </article>
+        </section>
+
+        <section id="section2">
+          <h2>Insert your image here</h2>
+          <div class="container">
+            <div class="container--image">
+              <input type="file" class="input--image" accept="image/*" />
+            </div>
+            <img class="display--image"></img>
+            <div class="container--Text">
+              <input type="text" class="text" />
+            </div>
+          </div>
+        </section>
+        <section id="steps">
+          <h2>Steps applied</h2>
+          <ol>
+            <li>read caption data</li>
+            <li>save captions into dict</li>
+            <li>clean text</li>
+            <li>create vocab</li>
+            <li>save descriptions</li>
+
+            <li>extract features from images using pre-trained model</li>
+            <li>load dataset for training the model</li>
+            <li>tokenize vocab into indexes</li>
+            <li>create data generator</li>
+            <li>define the model</li>
+            <li>Train</li>
+            <li>Test</li>
+          </ol>
+        </section>
+      </main>
+      <footer class="footer">
+        <section class="footer-logo">
+          <p>Made by: Hamza Abu Zahra and Mohamed Ibrahim</p>
+        </section>
+
+        <section class="footer-nav">Deep Learning CMPE 460</section>
+      </footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
